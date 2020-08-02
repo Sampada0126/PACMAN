@@ -95,7 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // console.log(getCoordinates(pacmanCurrentIndex))
     //move pacman
     function movePacman(e) {
+        if (pacman.isImmune) {
+                squares[pacmanCurrentIndex].classList.remove('immune-pac-man')
+            }
+        else{
         squares[pacmanCurrentIndex].classList.remove('pac-man')
+        }
         switch (e.keyCode) {
             case 37:
                 //left
@@ -144,7 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 down.play();
                 break
         }
+        if (pacman.isImmune) {
+                squares[pacmanCurrentIndex].classList.add('immune-pac-man')
+            }
+        else{
         squares[pacmanCurrentIndex].classList.add('pac-man')
+        }
         pacDotEaten()
         powerPelletEaten()
         checkForGameOver()
@@ -168,6 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(unScareGhosts, 10000)
             squares[pacmanCurrentIndex].classList.remove('power-pellet')
             powerpellet.play();
+            pacman.isImmune = true
+            squares[pacmanCurrentIndex].classList.remove('pac-man')
+            squares[pacmanCurrentIndex].classList.add('immune-pac-man')
+            setTimeout(unImmunePacman,10000)
         }
     }
 
@@ -175,6 +189,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function unScareGhosts() {
         ghosts.forEach(ghost => ghost.isScared = false)
     }
+    
+     function unImmunePacman(){
+        pacman.isImmune = false
+        squares[pacmanCurrentIndex].classList.remove('immune-pac-man')
+        squares[pacmanCurrentIndex].classList.add('pac-man')
+    }
+    
+    class pacman{
+        constructor(speed) {
+            //this.className = className
+            //this.startIndex = startIndex
+            //this.speed = speed
+            //this.currentIndex = startIndex
+            this.isImmune = false
+            this.timerId = NaN
+        }
+    }
+    
     //create ghosts using Constructors
     class Ghost {
         constructor(className, startIndex, speed) {
